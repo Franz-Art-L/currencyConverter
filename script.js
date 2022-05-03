@@ -9,31 +9,71 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var CurrencyConverter = function (_React$Component) {
     _inherits(CurrencyConverter, _React$Component);
 
-    function CurrencyConverter(props) {
+    function CurrencyConverter() {
         _classCallCheck(this, CurrencyConverter);
 
-        var _this = _possibleConstructorReturn(this, (CurrencyConverter.__proto__ || Object.getPrototypeOf(CurrencyConverter)).call(this, props));
+        var _this = _possibleConstructorReturn(this, (CurrencyConverter.__proto__ || Object.getPrototypeOf(CurrencyConverter)).call(this));
 
         _this.state = {
-            rate: 0.95,
+            rate: 0.89,
             usd: 1,
-            euro: 1 * 0.95
+            euro: 1 * 0.89
         };
+
+        _this.handleEuroChange = _this.handleEuroChange.bind(_this);
+        _this.handleUsdChange = _this.handleUsdChange.bind(_this);
         return _this;
     }
 
     _createClass(CurrencyConverter, [{
-        key: "toUsd",
+        key: 'toUsd',
         value: function toUsd(amount, rate) {
             return amount * (1 / rate);
         }
     }, {
-        key: "toEuro",
+        key: 'toEuro',
         value: function toEuro(amount, rate) {
             return amount * rate;
         }
     }, {
-        key: "render",
+        key: 'handleUsdChange',
+        value: function handleUsdChange(event) {
+            var input = parseFloat(event.target.value);
+            if (Number.isNaN(input)) {
+                this.setState({
+                    usd: '',
+                    euro: ''
+                });
+
+                return;
+            };
+
+            var euro = this.toEuro(input, this.state.rate).toFixed(3);
+            this.setState({
+                usd: input,
+                euro: euro
+            });
+        }
+    }, {
+        key: 'handleEuroChange',
+        value: function handleEuroChange(event) {
+            var input = parseFloat(event.target.value);
+            if (Number.isNaN(input)) {
+                this.setState({
+                    usd: '',
+                    euro: ''
+                });
+                return;
+            };
+
+            var usd = this.toUsd(input, this.state.rate).toFixed(3);
+            this.setState({
+                euro: input,
+                usd: usd
+            });
+        }
+    }, {
+        key: 'render',
         value: function render() {
             var _state = this.state,
                 rate = _state.rate,
@@ -42,28 +82,48 @@ var CurrencyConverter = function (_React$Component) {
 
 
             return React.createElement(
-                "div",
-                { className: "container" },
+                'div',
+                { className: 'container' },
                 React.createElement(
-                    "div",
-                    { className: "text-center p-3 mb-2" },
+                    'div',
+                    { className: 'text-center p-3 mb-2' },
                     React.createElement(
-                        "h2",
-                        { className: "mb-2" },
-                        "Currency Converter"
+                        'h2',
+                        { className: 'mb-2' },
+                        'Currency Converter'
                     ),
                     React.createElement(
-                        "h4",
+                        'h4',
                         null,
-                        "USD 1 : ",
+                        'USD 1 : ',
                         rate,
-                        " EURO"
+                        ' EURO'
                     )
                 ),
                 React.createElement(
-                    "div",
-                    { className: "row text-center" },
-                    React.createElement("div", { className: "col-12" })
+                    'div',
+                    { className: 'row text-center' },
+                    React.createElement(
+                        'div',
+                        { className: 'col-12' },
+                        React.createElement(
+                            'span',
+                            { className: 'mr-1' },
+                            'USD'
+                        ),
+                        React.createElement('input', { type: 'number', value: usd, onChange: this.handleUsdChange }),
+                        React.createElement(
+                            'span',
+                            { className: 'mx-3' },
+                            ' = '
+                        ),
+                        React.createElement('input', { type: 'number', value: euro, onChange: this.handleEuroChange }),
+                        React.createElement(
+                            'span',
+                            { className: 'ml-1' },
+                            'EURO'
+                        )
+                    )
                 )
             );
         }
