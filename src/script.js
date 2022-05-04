@@ -3,9 +3,9 @@ class CurrencyConverter extends React.Component{
         super();
 
         this.state = {
-            rate: 0.89,
+            rate: 0.95,
             usd: 1,
-            euro: 1 * 0.89,
+            euro: 1 * 0.95,
         };
 
         this.handleEuroChange = this.handleEuroChange.bind(this);
@@ -21,38 +21,28 @@ class CurrencyConverter extends React.Component{
     };
 
     handleUsdChange(event) {
-        const input = parseFloat(event.target.value);
-        if(Number.isNaN(input)) {
-            this.setState({
-                usd: '',
-                euro: '',
-            });
-            
-            return;
-        };
-
-        const euro = this.toEuro(input, this.state.rate).toFixed(3);
+        const euro = this.convert(event.target.value, this.state.rate, this.toEuro);
         this.setState({
-            usd: input,
+            usd: event.target.value,
             euro
         });
     };
 
     handleEuroChange(event) {
-        const input = parseFloat(event.target.value);
-        if(Number.isNaN(input)) {
-            this.setState({
-                usd: '',
-                euro: '',
-            });
-            return;
-        };
-
-        const usd = this.toUsd(input, this.state.rate).toFixed(3);
+        const usd = this.convert(event.target.value, this.state.rate, this.toUsd);
         this.setState({
-            euro: input,
-            usd           
+            euro: event.target.value,
+            usd
         });
+
+    };
+
+    convert(amount, rate, equation) {
+        const input = parseFloat(amount);
+        if(Number.isNaN(input)) {
+            return "";
+        }
+        return equation(input, rate).toFixed(3);
     };
 
     render() {
@@ -66,11 +56,15 @@ class CurrencyConverter extends React.Component{
                 </div>
                 <div className="row text-center">
                     <div className="col-12">
+                    
                         <span className="mr-1">USD</span>
-                        <input type="number" value={usd} onChange={this.handleUsdChange} />
+                        <CurrencyInput value={usd} handleChange={this.handleUsdChange} />
+                    
                         <span className="mx-3"> = </span>
-                        <input type="number" value={euro} onChange={this.handleEuroChange} />
+                    
+                       
                         <span className="ml-1">EURO</span>
+                        <CurrencyInput value={euro} handleChange={this.handleEuroChange} />
                     </div>
                 </div>
             </div>
@@ -78,4 +72,22 @@ class CurrencyConverter extends React.Component{
     }
 }
 
+class CurrencyInput extends React.Component {
+    render() {
+        const {value, handleChange} = this.props;
+
+        return <input value={value} onChange={handleChange} type="number" />
+    }
+}
+
+const Footer = () => {
+    return(
+        <div className="py-2 my-4 text-center">
+             <span>ReactJs practice by:</span>
+             <p><a href="https://confident-murdock-8e5bba.netlify.app/" target="_blank" rel="noopener noreferrer">Francis Artemio Landia</a><br />2022</p>
+        </div>
+    );
+  };
+
 ReactDOM.render(<CurrencyConverter/>, document.getElementById('root'));
+ReactDOM.render(<Footer/>, document.getElementById('footer'));

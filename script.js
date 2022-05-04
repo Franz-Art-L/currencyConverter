@@ -15,9 +15,9 @@ var CurrencyConverter = function (_React$Component) {
         var _this = _possibleConstructorReturn(this, (CurrencyConverter.__proto__ || Object.getPrototypeOf(CurrencyConverter)).call(this));
 
         _this.state = {
-            rate: 0.89,
+            rate: 0.95,
             usd: 1,
-            euro: 1 * 0.89
+            euro: 1 * 0.95
         };
 
         _this.handleEuroChange = _this.handleEuroChange.bind(_this);
@@ -26,54 +26,44 @@ var CurrencyConverter = function (_React$Component) {
     }
 
     _createClass(CurrencyConverter, [{
-        key: 'toUsd',
+        key: "toUsd",
         value: function toUsd(amount, rate) {
             return amount * (1 / rate);
         }
     }, {
-        key: 'toEuro',
+        key: "toEuro",
         value: function toEuro(amount, rate) {
             return amount * rate;
         }
     }, {
-        key: 'handleUsdChange',
+        key: "handleUsdChange",
         value: function handleUsdChange(event) {
-            var input = parseFloat(event.target.value);
-            if (Number.isNaN(input)) {
-                this.setState({
-                    usd: '',
-                    euro: ''
-                });
-
-                return;
-            };
-
-            var euro = this.toEuro(input, this.state.rate).toFixed(3);
+            var euro = this.convert(event.target.value, this.state.rate, this.toEuro);
             this.setState({
-                usd: input,
+                usd: event.target.value,
                 euro: euro
             });
         }
     }, {
-        key: 'handleEuroChange',
+        key: "handleEuroChange",
         value: function handleEuroChange(event) {
-            var input = parseFloat(event.target.value);
-            if (Number.isNaN(input)) {
-                this.setState({
-                    usd: '',
-                    euro: ''
-                });
-                return;
-            };
-
-            var usd = this.toUsd(input, this.state.rate).toFixed(3);
+            var usd = this.convert(event.target.value, this.state.rate, this.toUsd);
             this.setState({
-                euro: input,
+                euro: event.target.value,
                 usd: usd
             });
         }
     }, {
-        key: 'render',
+        key: "convert",
+        value: function convert(amount, rate, equation) {
+            var input = parseFloat(amount);
+            if (Number.isNaN(input)) {
+                return "";
+            }
+            return equation(input, rate).toFixed(3);
+        }
+    }, {
+        key: "render",
         value: function render() {
             var _state = this.state,
                 rate = _state.rate,
@@ -82,47 +72,47 @@ var CurrencyConverter = function (_React$Component) {
 
 
             return React.createElement(
-                'div',
-                { className: 'container' },
+                "div",
+                { className: "container" },
                 React.createElement(
-                    'div',
-                    { className: 'text-center p-3 mb-2' },
+                    "div",
+                    { className: "text-center p-3 mb-2" },
                     React.createElement(
-                        'h2',
-                        { className: 'mb-2' },
-                        'Currency Converter'
+                        "h2",
+                        { className: "mb-2" },
+                        "Currency Converter"
                     ),
                     React.createElement(
-                        'h4',
+                        "h4",
                         null,
-                        'USD 1 : ',
+                        "USD 1 : ",
                         rate,
-                        ' EURO'
+                        " EURO"
                     )
                 ),
                 React.createElement(
-                    'div',
-                    { className: 'row text-center' },
+                    "div",
+                    { className: "row text-center" },
                     React.createElement(
-                        'div',
-                        { className: 'col-12' },
+                        "div",
+                        { className: "col-12" },
                         React.createElement(
-                            'span',
-                            { className: 'mr-1' },
-                            'USD'
+                            "span",
+                            { className: "mr-1" },
+                            "USD"
                         ),
-                        React.createElement('input', { type: 'number', value: usd, onChange: this.handleUsdChange }),
+                        React.createElement(CurrencyInput, { value: usd, handleChange: this.handleUsdChange }),
                         React.createElement(
-                            'span',
-                            { className: 'mx-3' },
-                            ' = '
+                            "span",
+                            { className: "mx-3" },
+                            " = "
                         ),
-                        React.createElement('input', { type: 'number', value: euro, onChange: this.handleEuroChange }),
                         React.createElement(
-                            'span',
-                            { className: 'ml-1' },
-                            'EURO'
-                        )
+                            "span",
+                            { className: "ml-1" },
+                            "EURO"
+                        ),
+                        React.createElement(CurrencyInput, { value: euro, handleChange: this.handleEuroChange })
                     )
                 )
             );
@@ -132,4 +122,52 @@ var CurrencyConverter = function (_React$Component) {
     return CurrencyConverter;
 }(React.Component);
 
+var CurrencyInput = function (_React$Component2) {
+    _inherits(CurrencyInput, _React$Component2);
+
+    function CurrencyInput() {
+        _classCallCheck(this, CurrencyInput);
+
+        return _possibleConstructorReturn(this, (CurrencyInput.__proto__ || Object.getPrototypeOf(CurrencyInput)).apply(this, arguments));
+    }
+
+    _createClass(CurrencyInput, [{
+        key: "render",
+        value: function render() {
+            var _props = this.props,
+                value = _props.value,
+                handleChange = _props.handleChange;
+
+
+            return React.createElement("input", { value: value, onChange: handleChange, type: "number" });
+        }
+    }]);
+
+    return CurrencyInput;
+}(React.Component);
+
+var Footer = function Footer() {
+    return React.createElement(
+        "div",
+        { className: "py-2 my-4 text-center" },
+        React.createElement(
+            "span",
+            null,
+            "ReactJs practice by:"
+        ),
+        React.createElement(
+            "p",
+            null,
+            React.createElement(
+                "a",
+                { href: "https://confident-murdock-8e5bba.netlify.app/", target: "_blank", rel: "noopener noreferrer" },
+                "Francis Artemio Landia"
+            ),
+            React.createElement("br", null),
+            "2022"
+        )
+    );
+};
+
 ReactDOM.render(React.createElement(CurrencyConverter, null), document.getElementById('root'));
+ReactDOM.render(React.createElement(Footer, null), document.getElementById('footer'));
